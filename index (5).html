@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enter</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+  #vortex-wrap {
+    font-family: 'Share Tech Mono', monospace;
+    background: #0a0a0a;
+    color: #00ff88;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #vortex-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.015) 2px, rgba(0,255,136,0.015) 4px);
+    pointer-events: none;
+  }
+  #terminal-lines {
+    font-size: 13px;
+    line-height: 2;
+    color: #00cc66;
+  }
+  .line { display: block; opacity: 0; }
+  .line.visible { opacity: 1; }
+  .line.comment { color: #4a6e52; }
+  .line.warning { color: #d4a017; }
+  .line.bright { color: #00ff88; }
+  .line.cmd { color: #00aaff; }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: #00ff88;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.7s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  #enter-btn {
+    display: none;
+    margin-top: 1.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    color: #0a0a0a;
+    background: #00ff88;
+    border: none;
+    padding: 0.7rem 2.5rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  #enter-btn:hover { background: #00ffaa; transform: scale(1.03); }
+  #enter-btn:active { transform: scale(0.98); }
+  #access-granted {
+    display: none;
+    margin-top: 1.5rem;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    color: #00ff88;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.8s ease;
+    z-index: 99;
+  }
+  #scanline {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 18%;
+    background: linear-gradient(to bottom, transparent, rgba(0,255,136,0.04), transparent);
+    animation: scan 5s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes scan { to { top: 110%; } }
+</style>
+</head>
+<body>
+<div id="vortex-wrap">
+  <div id="scanline"></div>
+  <div id="terminal-lines">
+    <span class="line comment" id="l0">// ——————————————————————————————</span>
+    <span class="line cmd"     id="l1">&gt; initializing_portal.exe</span>
+    <span class="line"         id="l2">&gt; loading user credentials...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[OK]</span>
+    <span class="line"         id="l3">&gt; scanning for vortex endpoint...</span>
+    <span class="line warning" id="l4">// WARNING: unauthorized access detected</span>
+    <span class="line comment" id="l5">// bypassing firewall.......... [OK]</span>
+    <span class="line comment" id="l6">/* tunnel established */</span>
+    <span class="line"         id="l7">&gt; route: /dev/null/vortex/core</span>
+    <span class="line bright"  id="l8">&gt; status: ACTIVE</span>
+    <span class="line warning" id="l9">// destination: unknown</span>
+    <span class="line comment" id="l10">// proceed with caution</span>
+    <span class="line cmd"     id="l11">$ unlock --force --silent --no-trace</span>
+    <span class="line"         id="l12">&gt; decrypting access key... ██████████ 100%</span>
+    <span class="line bright"  id="l13">&gt; vortex.open()&nbsp;&nbsp;<span class="cursor" id="cur"></span></span>
+  </div>
+  <button id="enter-btn">&nbsp;[&nbsp;ENTER&nbsp;]&nbsp;</button>
+  <div id="access-granted">&gt; ACCESS GRANTED // redirecting...</div>
+</div>
+<div id="overlay"></div>
+
+<script>
+  var DEST = 'https://readymag.website/u45871204/6152630/2/';
+  var lines = document.querySelectorAll('.line');
+  var delays = [0,100,250,400,550,700,820,940,1060,1180,1300,1450,1650,1900];
+
+  lines.forEach(function(line, i) {
+    setTimeout(function() {
+      line.classList.add('visible');
+      if (i === lines.length - 1) {
+        setTimeout(function() {
+          document.getElementById('cur').style.display = 'none';
+          document.getElementById('enter-btn').style.display = 'inline-block';
+        }, 400);
+      }
+    }, delays[i]);
+  });
+
+  document.getElementById('enter-btn').addEventListener('click', function() {
+    var btn = document.getElementById('enter-btn');
+    var granted = document.getElementById('access-granted');
+    var overlay = document.getElementById('overlay');
+
+    btn.style.display = 'none';
+    granted.style.display = 'block';
+
+    setTimeout(function() {
+      overlay.style.display = 'block';
+      setTimeout(function() {
+        overlay.style.opacity = '1';
+      }, 50);
+    }, 1200);
+
+    setTimeout(function() {
+      try { window.top.location.href = DEST; } catch(e) {
+        try { window.parent.location.href = DEST; } catch(e2) {
+          window.location.href = DEST;
+        }
+      }
+    }, 2200);
+  });
+</script>
+</body>
+</html>
